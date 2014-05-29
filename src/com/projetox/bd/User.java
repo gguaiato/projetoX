@@ -15,7 +15,7 @@ public class User {
 	private Long id;
 	
 	@Column(name="facebook_id",unique=true)
-	private Long facebookId;
+	private String facebookId;
 	
 	@Column(name="name")
 	private String name;
@@ -26,19 +26,20 @@ public class User {
 	@Column(name="gender")
 	private String gender;
 
+	public User() {}
 	
-	public User(Long facebookId, String name, String username, String gender) {
+	public User(String facebookId, String name, String username, String gender) {
 		this.facebookId = facebookId;
 		this.name = name;
 		this.username = username;
 		this.gender = gender;
 	}
 
-	public Long getFacebookId() {
+	public String getFacebookId() {
 		return facebookId;
 	}
 
-	public void setFacebookId(Long facebookId) {
+	public void setFacebookId(String facebookId) {
 		this.facebookId = facebookId;
 	}
 

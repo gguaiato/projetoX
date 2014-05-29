@@ -19,7 +19,7 @@ public class UserRepository extends Repository<User, Long>{
 		return instance;
 	}
 	
-	private User findByFacebookId(Long facebookId) {
+	private User findByFacebookId(String facebookId) {
 		return findUniqueByCriteria(Restrictions.eq("facebookId", facebookId));
 	}
 	
@@ -33,7 +33,7 @@ public class UserRepository extends Repository<User, Long>{
 		return false;
 	}
 	
-	public boolean delete(long facebookId) {
+	public boolean delete(String facebookId) {
 		User existingUser = findByFacebookId(facebookId);
 		if (existingUser != null) {
 			delete(existingUser);
