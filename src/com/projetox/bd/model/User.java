@@ -1,4 +1,4 @@
-package com.projetox.bd;
+package com.projetox.bd.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,14 +7,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 @Entity
 @Table(name="user")
 public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@SerializedName("userId")
 	private Long id;
 	
 	@Column(name="facebook_id",unique=true)
+	@SerializedName("id")
 	private String facebookId;
 	
 	@Column(name="name")

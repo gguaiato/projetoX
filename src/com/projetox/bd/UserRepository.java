@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 
-public class UserRepository extends Repository<User, Long>{
+import com.projetox.bd.model.User;
+
+public class UserRepository extends Repository<User>{
 
 	private static final long serialVersionUID = 926118319362559453L;
 	private static UserRepository instance;
@@ -43,6 +45,6 @@ public class UserRepository extends Repository<User, Long>{
 	}
 	
 	public List<User> list(int limitQtd) {
-		return list(limitQtd);
+		return super.list(limitQtd);
 	}
 }

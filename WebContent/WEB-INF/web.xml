@@ -17,6 +17,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProjetoX REST Service</servlet-name>
-		<url-pattern>/person/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 </web-app>

@@ -12,7 +12,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 
-public class Repository<T, ID extends Serializable> implements Serializable {
+public class Repository<T> implements Serializable {
 
 	private static final String PERSISTENCE_UNIT_NAME = "projetox";
 	protected EntityManager em;
@@ -21,20 +21,22 @@ public class Repository<T, ID extends Serializable> implements Serializable {
 	private final Class<T> persistentClass;
 
 	@SuppressWarnings("unchecked")
-	public Repository() {
+	protected Repository() {
 		this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
 				.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
-	public List<T> list(int qtd) {
-		return findByCriteria(createCriteria().setMaxResults(qtd));
+	protected List<T> list(int qtd) {
+		if (qtd > 1)
+			return findByCriteria(createCriteria().setMaxResults(qtd));
+		return findByCriteria();
 	}
 
-	public Class<T> getEntityClass() {
+	private Class<T> getEntityClass() {
 		return persistentClass;
 	}
 
-	public EntityManager getEntityManager() {
+	private EntityManager getEntityManager() {
 		if (em != null)
 			return em;
 		emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
@@ -71,11 +73,11 @@ public class Repository<T, ID extends Serializable> implements Serializable {
 		return crit;
 	}
 
-	public void delete(T entity) {
+	protected void delete(T entity) {
 		getEntityManager().remove(entity);
 	}
 
-	public T save(T entity) {
+	protected T save(T entity) {
 		T savedEntity = getEntityManager().merge(entity);
 		return savedEntity;
 	}
