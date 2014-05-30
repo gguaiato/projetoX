@@ -55,7 +55,7 @@ public class WebServices {
 	public String listUsers(@QueryParam("limit") int limitQtd) {
 		List<User> users = userRepository.list(limitQtd);
 		String json = new Gson().toJson(users);
-		String response = HTTP_200 + "/n" + json;
+		String response = HTTP_200 + "\n" + json;
 		return response;
 	}
 
