@@ -1,4 +1,4 @@
-package com.projetox;
+package com.projetox.rest;
 
 import com.google.gson.Gson;
 import com.projetox.bd.model.User;
@@ -7,6 +7,21 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 public class Utils {
+	// HTTP 200 OK 
+	// The request has succeeded.
+	public static final String HTTP_200 = "HTTP 200";
+	// HTTP 202 Created 
+	// The request has been fulfilled and resulted in a new resource being created.
+	public static final String HTTP_201 = "HTTP 201";
+	// HTTP 202 Accepted 
+	// The request has been accepted for processing, but the processing has not been completed.
+	public static final String HTTP_202 = "HTTP 202";
+	// HTTP 204 No Content
+	// The server has fulfilled the request but does not need to return an entity-body.
+	public static final String HTTP_204 = "HTTP 204";
+	// HTTP 404 Not Found
+	// The server has not found anything matching the Request-URI.
+	public static final String HTTP_404 = "HTTP 404";
 	
 	private static final String GRAPH_FB_URL = "http://graph.facebook.com/";
 	
