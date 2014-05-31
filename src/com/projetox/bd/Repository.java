@@ -37,10 +37,10 @@ public class Repository<T> implements Serializable {
 	}
 
 	private EntityManager getEntityManager() {
-		if (em != null)
-			return em;
-		emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-		em = emf.createEntityManager();
+		if (em == null) {
+			emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+			em = emf.createEntityManager();
+		}
 		return em;
 	}
 
@@ -68,17 +68,26 @@ public class Repository<T> implements Serializable {
 	}
 
 	protected Criteria createCriteria() {
-		Session session = (Session) getEntityManager().getDelegate();
+		Session session = getSession();
 		Criteria crit = session.createCriteria(getEntityClass());
 		return crit;
 	}
 
+	public Session getSession() {
+		Session session = (Session) getEntityManager().getDelegate();
+		return session;
+	}
+
 	protected void delete(T entity) {
-		getEntityManager().remove(entity);
+		Session session = getSession();
+		session.delete(entity);
+		session.flush();
 	}
 
 	protected T save(T entity) {
-		T savedEntity = getEntityManager().merge(entity);
+		Session session = getSession();
+		T savedEntity = (T) session.merge(entity);
+		session.flush();
 		return savedEntity;
 	}
 }

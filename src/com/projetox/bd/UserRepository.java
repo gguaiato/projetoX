@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 
 import com.projetox.bd.model.User;
-import com.projetox.rest.WebServices;
 
 public class UserRepository extends Repository<User>{
 

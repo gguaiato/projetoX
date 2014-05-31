@@ -8,27 +8,28 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 @Entity
 @Table(name="user")
 public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@SerializedName("userId")
 	private Long id;
 	
+	@Column(name="username")
+	@Expose
+	private String username;
+	
 	@Column(name="facebook_id",unique=true)
-	@SerializedName("id")
+	@Expose
 	private String facebookId;
 	
 	@Column(name="name")
+	@Expose
 	private String name;
 	
-	@Column(name="username")
-	private String username;
-	
 	@Column(name="gender")
+	@Expose
 	private String gender;
 
 	public User() {}
