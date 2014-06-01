@@ -14,7 +14,7 @@ Após a devida instalação dos requisitos para compilação, navegar até a pas
 
 * mvn package
 
-Logo após, será criado o arquivo projetoX-1.0.war no diretório de nome target da pasta do projeto que deve ser usado para deploy no servidor Tomcat.
+Logo após, será criado o arquivo projetoX-1.0.war no diretório de nome target da pasta do projeto. Este deve ser usado para deploy no servidor Tomcat.
 
 Requisitos para execução
 -------------------------------------

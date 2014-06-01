@@ -24,7 +24,7 @@ public class WebServicesTest extends JerseyTest {
 
 	private static final String FACEBOOK_ID_TEST = "100007710667474";
 	private static final String FACEBOOK_USERNAME_TEST = "renato.luizalabs";
-	private static final String REST_BASE_URL = "http://localhost:8080/projetoX";
+	private static final String REST_BASE_URL = "http://localhost:8080/projetoX-1.0";
 	private static final String REST_PERSON = "/person";
 
 	private final WebResource webResource = client().resource(REST_BASE_URL);
@@ -58,12 +58,12 @@ public class WebServicesTest extends JerseyTest {
 				.accept(MediaType.TEXT_PLAIN).post(ClientResponse.class, part);
 		responseText = response.getEntity(String.class);
 		
-		Assert.assertEquals(ACCEPTED.getStatusCode(), response.getStatus());
+		Assert.assertEquals(ACCEPTED.getStatusCode(),  response.getStatus());
 	}
 
 	public void testGet() {
 		ClientResponse response = webResource.path(REST_PERSON)
-				.accept(MediaType.TEXT_PLAIN).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		String responseText = response.getEntity(String.class);
 		
 		Assert.assertEquals(OK.getStatusCode(), response.getStatus());
@@ -85,7 +85,7 @@ public class WebServicesTest extends JerseyTest {
 
 	private void testGetDeleted() {
 		ClientResponse response = webResource.path(REST_PERSON)
-				.accept(MediaType.TEXT_PLAIN).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		String responseText = response.getEntity(String.class);
 		
 		Assert.assertEquals(OK.getStatusCode(), response.getStatus());
