@@ -28,10 +28,10 @@ public class UserRepository extends Repository<User> {
 	}
 
 	public boolean insert(User user) {
-		logger.info("Inserindo usuario na base de dados com facebookId = "
-				+ user.getFacebookId());
 		User existingUser = findByFacebookId(user.getFacebookId());
 		if (existingUser == null) {
+			logger.info("Inserindo usuario na base de dados com facebookId = "
+					+ user.getFacebookId());
 			existingUser = save(user);
 			return true;
 		}
@@ -39,10 +39,10 @@ public class UserRepository extends Repository<User> {
 	}
 
 	public boolean delete(String facebookId) {
-		logger.info("Deletando usuario na base de dados com facebookId = "
-				+ facebookId);
 		User existingUser = findByFacebookId(facebookId);
 		if (existingUser != null) {
+			logger.info("Deletando usuario na base de dados com facebookId = "
+					+ facebookId);
 			delete(existingUser);
 			return true;
 		}

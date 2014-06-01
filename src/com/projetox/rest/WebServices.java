@@ -55,7 +55,7 @@ public class WebServices {
 
 	
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response listUsers(@QueryParam("limit") int limitQtd) {
 		logger.info("GET /person params: " + "limitQtd=" + limitQtd);
 		List<User> users = userRepository.list(limitQtd);

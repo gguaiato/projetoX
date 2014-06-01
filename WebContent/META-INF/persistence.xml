@@ -11,6 +11,7 @@
 			<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JDBCTransactionFactory" />
 			<property name="hibernate.connection.autocommit" value="true" /><!-- Valor true devido aos propositos da aplicacao -->						
 			<property name="hibernate.max_fetch_depth" value="3" />
+			<property name="hibernate.show_sql" value="false"/>
 
 			<!-- Pool de conexoes -->
 			<property name="hibernate.c3p0.min_size" value="5" />
