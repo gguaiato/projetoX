@@ -49,14 +49,11 @@ public class WebServicesTest extends JerseyTest {
 				.type(MediaType.MULTIPART_FORM_DATA_TYPE)
 				.accept(MediaType.TEXT_PLAIN).post(ClientResponse.class, part);
 		
-		String responseText = response.getEntity(String.class);
-		
 		Assert.assertEquals(CREATED.getStatusCode(), response.getStatus());
 		
 		response = webResource.path(REST_PERSON)
 				.type(MediaType.MULTIPART_FORM_DATA_TYPE)
 				.accept(MediaType.TEXT_PLAIN).post(ClientResponse.class, part);
-		responseText = response.getEntity(String.class);
 		
 		Assert.assertEquals(ACCEPTED.getStatusCode(),  response.getStatus());
 	}
