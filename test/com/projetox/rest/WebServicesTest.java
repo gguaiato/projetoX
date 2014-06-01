@@ -1,26 +1,37 @@
 package com.projetox.rest;
 
-import static com.jayway.restassured.RestAssured.expect;
-import static com.projetox.rest.HttpCodes.HTTP_200;
-import static com.projetox.rest.HttpCodes.HTTP_201;
-import static com.projetox.rest.HttpCodes.HTTP_202;
-import static com.projetox.rest.HttpCodes.HTTP_204;
-import static com.projetox.rest.HttpCodes.HTTP_404;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
+import static junit.framework.Assert.assertTrue;
 
-import org.junit.BeforeClass;
+import javax.ws.rs.core.MediaType;
+
+import junit.framework.Assert;
+
 import org.junit.Test;
 
-import com.jayway.restassured.RestAssured;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.multipart.FormDataMultiPart;
+import com.sun.jersey.test.framework.AppDescriptor;
+import com.sun.jersey.test.framework.JerseyTest;
+import com.sun.jersey.test.framework.WebAppDescriptor;
 
-public class WebServicesTest {
+public class WebServicesTest extends JerseyTest {
 
 	private static final String FACEBOOK_ID_TEST = "100007710667474";
+	private static final String FACEBOOK_USERNAME_TEST = "renato.luizalabs";
+	private static final String REST_BASE_URL = "http://localhost:8080/projetoX";
+	private static final String REST_PERSON = "/person";
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		RestAssured.basePath = "http://localhost:8080/projetoX";
+	private final WebResource webResource = client().resource(REST_BASE_URL);
+
+	@Override
+	protected AppDescriptor configure() {
+		return new WebAppDescriptor.Builder().build();
 	}
 
 	@Test
@@ -32,31 +43,53 @@ public class WebServicesTest {
 	}
 
 	public void testPost() {
-		expect().statusCode(HTTP_201.getCode()).given()
-				.param("facebookId", FACEBOOK_ID_TEST).when().post("/person")
-				.then().body(containsString(HTTP_201.toString()));
-		expect().statusCode(HTTP_202.getCode()).given()
-				.param("facebookId", FACEBOOK_ID_TEST).when().post("/person")
-				.then().body(containsString(HTTP_202.toString()));
+		FormDataMultiPart part = new FormDataMultiPart().field("facebookId",
+				FACEBOOK_ID_TEST);
+		ClientResponse response = webResource.path(REST_PERSON)
+				.type(MediaType.MULTIPART_FORM_DATA_TYPE)
+				.accept(MediaType.TEXT_PLAIN).post(ClientResponse.class, part);
+		
+		String responseText = response.getEntity(String.class);
+		
+		Assert.assertEquals(CREATED.getStatusCode(), response.getStatus());
+		
+		response = webResource.path(REST_PERSON)
+				.type(MediaType.MULTIPART_FORM_DATA_TYPE)
+				.accept(MediaType.TEXT_PLAIN).post(ClientResponse.class, part);
+		responseText = response.getEntity(String.class);
+		
+		Assert.assertEquals(ACCEPTED.getStatusCode(), response.getStatus());
 	}
 
 	public void testGet() {
-		expect().statusCode(HTTP_200.getCode()).given().when().get("/person")
-				.then().body("facebookId", equalTo(FACEBOOK_ID_TEST))
-				.body(containsString(HTTP_200.toString()));
+		ClientResponse response = webResource.path(REST_PERSON)
+				.accept(MediaType.TEXT_PLAIN).get(ClientResponse.class);
+		String responseText = response.getEntity(String.class);
+		
+		Assert.assertEquals(OK.getStatusCode(), response.getStatus());
+		assertTrue(responseText.contains(FACEBOOK_ID_TEST));
+		assertTrue(responseText.contains(FACEBOOK_USERNAME_TEST));
 	}
 
 	public void testDelete() {
-		expect().statusCode(HTTP_204.getCode()).given().when()
-				.delete("/person/" + FACEBOOK_ID_TEST).then()
-				.body(containsString(HTTP_204.toString()));
-		expect().statusCode(HTTP_404.getCode()).given().when()
-				.delete("/person/" + FACEBOOK_ID_TEST).then()
-				.body(containsString(HTTP_404.toString()));
+		ClientResponse response = webResource.path(REST_PERSON + "/" + FACEBOOK_ID_TEST)
+				.accept(MediaType.TEXT_PLAIN).delete(ClientResponse.class);
+		
+		Assert.assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
+		
+		response = webResource.path(REST_PERSON + "/" + FACEBOOK_ID_TEST)
+				.accept(MediaType.TEXT_PLAIN).delete(ClientResponse.class);
+		
+		Assert.assertEquals(NOT_FOUND.getStatusCode(), response.getStatus());
 	}
 
 	private void testGetDeleted() {
-		expect().statusCode(HTTP_200.getCode()).given().when().get("/person")
-				.then().body("facebookId", equalTo(FACEBOOK_ID_TEST));
+		ClientResponse response = webResource.path(REST_PERSON)
+				.accept(MediaType.TEXT_PLAIN).get(ClientResponse.class);
+		String responseText = response.getEntity(String.class);
+		
+		Assert.assertEquals(OK.getStatusCode(), response.getStatus());
+		assertTrue(!responseText.contains(FACEBOOK_ID_TEST));
+		assertTrue(!responseText.contains(FACEBOOK_USERNAME_TEST));
 	}
 }

@@ -1,18 +1,24 @@
 package com.projetox.rest;
 
+import static com.projetox.rest.Utils.buildSimpleResponse;
+import static com.projetox.rest.Utils.buildTextResponse;
+import static com.projetox.rest.Utils.getUserFromFacebookId;
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
+
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -24,7 +30,6 @@ import com.projetox.bd.UserRepository;
 import com.projetox.bd.model.User;
 import com.sun.jersey.multipart.FormDataParam;
 
-import static com.projetox.rest.HttpCodes.*;
 
 @Path("/person")
 public class WebServices {
@@ -35,33 +40,37 @@ public class WebServices {
 	
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response includeUser(@FormDataParam("facebookId") String facebookId) {
 		logger.info("POST /person params: " + "facebookId=" + facebookId);
-		User user = Utils.getUserFromFacebookId(facebookId);
+		User user = getUserFromFacebookId(facebookId);
 		if (user != null) {
 			boolean included = userRepository.insert(user);
 			if (included) 
-				return Response.status(HTTP_201.getCode()).entity(HTTP_201.toString()).build();
+				return buildSimpleResponse(CREATED);
 		}
-		return Response.status(HTTP_202.getCode()).entity(HTTP_202.toString()).build();
+		return buildSimpleResponse(ACCEPTED);
 	}
 	
+
+	
 	@GET
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response listUsers(@QueryParam("limit") int limitQtd) {
 		logger.info("GET /person params: " + "limitQtd=" + limitQtd);
 		List<User> users = userRepository.list(limitQtd);
 		String json = gson.toJson(users);
-		String response = HTTP_200.toString() + "\n" + json;
-		return Response.status(HTTP_200.getCode()).entity(response).build();
+		return buildTextResponse(OK, json);
 	}
 
 	@DELETE
 	@Path("/{facebookId}")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response deleteUser(@PathParam("facebookId") String facebookId) {
 		logger.info("DELETE /person params: " + "facebookId=" + facebookId);
 		boolean deleted = userRepository.delete(facebookId);
 		if (deleted) 
-			return Response.status(HTTP_204.getCode()).entity(HTTP_204.toString()).build();
-		return Response.status(HTTP_404.getCode()).entity(HTTP_404.toString()).build();
+			return buildSimpleResponse(NO_CONTENT);
+		return buildSimpleResponse(NOT_FOUND);
 	}
 }
