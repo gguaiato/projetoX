@@ -50,3 +50,13 @@ A utilização dos serviços de GET, POST e DELETE deve ser feita com base no en
 
 * curl -X DELETE http://localhost:8080/projetoX-1.0/person/100007710667474 -v
 
+Cobertura dos testes unitários
+-------------------------------------------
+A utilização de testes unitários é permitida a partir da execução da classe WebServicesTest como JUnit Test. Ele efetua testes seguindo os seguintes passo:
+
+* POST para http://localhost:8080/projetoX-1.0/person com parametro facebookId=100007710667474 e espera receber o status de resposta HTTP CREATED.
+* POST idêntico ao acima e espera receber o status de resposta ACCEPTED, de forma que a requisição foi recebida, porém nenhuma ação foi executada uma vez que o usuário já está cadastrado na base.
+* GET em http://localhost:8080/projetoX-1.0/person e espera receber um código de status HTTP OK com uma lista com os usuários cadastrados contendo o facebookId 100007710667474 e a String renato.luizalabs
+* DELETE em http://localhost:8080/projetoX-1.0/person/100007710667474  e espera receber um código de status HTTP NO_CONTENT, que representa que o usuário foi deletado da base de dados.
+* DELETE em http://localhost:8080/projetoX-1.0/person/100007710667474  e espera receber um código de status HTTP NOT_FOUND, que representa que o usuário não foi encontrado na base de dados e pois já foi deletado.
+* GET em http://localhost:8080/projetoX-1.0/person e espera receber um código de status HTTP OK com uma lista com os usuários cadastrados sem conter o facebookId 100007710667474 e a String renato.luizalabs.
